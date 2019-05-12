@@ -11,8 +11,8 @@
 
 <div>
   <p>Username</p>
-  <input type="text">
-  <button type="submit" class="btn btn-primary">List texts</button>
+  <input type="text" class="listButton">
+  <button type="submit" class="btn btn-primary" id='list'>List texts</button>
 </div>
 
 <div>
@@ -25,6 +25,20 @@
   <input type="text">
   <button type="submit" class="btn btn-primary">Done</button>
 </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.listButton').on('click', function(){
+
+    })
+  })
+  function listTexts() {
+    console.log("aaaaaaaa")
+  }
+</script>
 
 </body>
 </html>

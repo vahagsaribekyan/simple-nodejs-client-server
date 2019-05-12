@@ -39,27 +39,38 @@ const errorHandler = (err, req, res) => {
 // Fetch Latest Currency Rates
 app.get('/users', async (req, res) => {
   try {
-    const data = req.body;
-    // create a new user called chris
-    var chris = new User({
-      username: "vahag",
-      city: "yerevan",
-      texts: [{body: "barev"}]
-    });
-
-    // call the built-in save method to save to the database
-    chris.save(function(err) {
+    let data;
+    // get the user starlord55
+    User.find({ username: 'vahag' }).lean().exec(function(err, users) {
       if (err) throw err;
 
-      console.log('User saved successfully!');
+      // object of the user
+      data = users[0].texts.map((text) => text.body);
     });
 
     res.setHeader('Content-Type', 'application/json');
-    res.send(data);
+    res.send(JSON.stringify(data));
   } catch (error) {
     errorHandler(error, req, res);
   }
 });
+
+app.post('/users/text', async (req, res) => {
+  // create a new user
+  let newUser = User({
+    username: req.body.username,
+    city: req.body.city,
+    texts: [{body: req.body.text}]
+  });
+
+  // save the user
+  newUser.save(function(err) {
+    if (err) throw err;
+
+    console.log('Text added for the user!');
+  });
+
+}); 
 
 // Redirect all traffic to index.html
 app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
