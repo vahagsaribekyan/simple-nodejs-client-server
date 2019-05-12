@@ -38,23 +38,31 @@ const errorHandler = (err, req, res) => {
 // Fetch Latest Currency Rates
 app.get('/users', async (req, res) => {
   try {
-    const user = await User.find({ username: 'vahag' });
-
-    res.send(user);
+    let username = req.query.username;
+    if(username) {
+      const user = await User.find({ username });
+      res.send(user);
+    } else {
+      res.send();
+    }
   } catch (error) {
     errorHandler(error, req, res);
   }
 });
 
 app.post('/users/text', async (req, res) => {
-  // create a new user
-  let newUser = new User({
-    username: req.body.username,
-    city: req.body.city,
-    texts: [{ body: req.body.text }]
-  });
-  const data = await newUser.save();
-  res.send(data);
+  try {
+    // create a new user
+    let newUser = new User({
+      username: req.body.username,
+      city: req.body.city,
+      texts: [{ body: req.body.text }]
+    });
+    const data = await newUser.save();
+    res.send(data);
+  } catch (error) {
+    errorHandler(error, req, res);
+  }
 });
 
 // Redirect all traffic to index.html

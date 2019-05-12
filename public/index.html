@@ -11,40 +11,58 @@
 
 <div>
     <p>Username</p>
-    <input type="text" class="username">
-    <button type="submit" class="btn btn-primary" id='button'>List texts</button>
+    <input type="text" class="username" id="usernameInput">
+    <button type="submit" class="btn btn-primary" id='listBtn'>List texts</button>
 </div>
 
 <div>
     <p>City</p>
-    <input type="text" class="city">
+    <input type="text" class="city" id="cityInput">
 </div>
 
 <div>
     <p>Please enter your text</p>
-    <input type="text" class="text">
-    <button type="submit" class="btn btn-primary" id="portbutton">Done</button>
+    <input type="text" class="text" id="textInput">
+    <button type="submit" class="btn btn-primary" id="submitBtn">Done</button>
 </div>
-
+<div id="list">
+</div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('#button').on('click', function () {
-      $.get('/users', function (data) {
-        console.log(data);
-      });
+
+    $('#listBtn').on('click', function () {
+      let username = $('.username').val();
+      if(username !== '') {
+        $.get(`/users?username=${username}`, function (data) {
+          $('#list').empty();
+          if(data && data[0] && data[0].texts && data[0].texts.length) {
+            let ht = '<ul>';
+            data[0].texts.forEach((text) => {
+              ht = ht + `<li>${text.body}</li>`;
+            })
+            $('#list').html(ht);
+          }
+        });
+      }
     });
-    $('#portbutton').on('click', function () {
+
+
+    $('#submitBtn').on('click', function () {
       let username = $('.username').val();
       let city = $('.city').val();
       let text = $('.text').val();
       $.post('/users/text', { username: username, city: city, text: text }, function (data) {
-        console.log(data);
+        $('.city').val('');
+        $('.text').val('');
+        $('.username').val('');
+        alert('submitted');
       });
     });
+
   });
 </script>
 
