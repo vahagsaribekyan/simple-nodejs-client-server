@@ -52,15 +52,38 @@ app.get('/users', async (req, res) => {
 
 app.post('/users/text', async (req, res) => {
   try {
-    // create a new user
-    let newUser = new User({
-      username: req.body.username,
-      city: req.body.city,
-      texts: [{ body: req.body.text }]
+    const users = await User.find({ username: req.body.username });
+    let found = false;
+    User.findOne({username: req.body.username}, (err, user) => {
+      if(!user) return;
+        found = true;
+        for (let j = 0; j < user.texts.length; ++j) {
+          if(user.texts[j].body == req.body.text) {
+            res.send("already subitted");
+            return;
+          }
+        }
+        user.texts.push({body: req.body.text});
+        user.save((err) => {
+          if(err) throw err;
+        });
+        res.send();
     });
-    const data = await newUser.save();
-    res.send(data);
+
+    if(!found) {
+      // create a new user
+      let newUser = new User({
+        username: req.body.username,
+        city: req.body.city,
+        texts: [{ body: req.body.text }]
+      });
+
+      await newUser.save();
+      res.send();
+    }
+
   } catch (error) {
+    console.log(error)
     errorHandler(error, req, res);
   }
 });

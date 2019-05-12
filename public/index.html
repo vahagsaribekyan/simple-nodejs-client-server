@@ -56,9 +56,13 @@
       let city = $('.city').val();
       let text = $('.text').val();
       $.post('/users/text', { username: username, city: city, text: text }, function (data) {
+        if(data) {
+          alert('already submitted');
+        }
         $('.city').val('');
         $('.text').val('');
         $('.username').val('');
+        $('#list').empty();
         alert('submitted');
       });
     });
