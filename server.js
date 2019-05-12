@@ -21,7 +21,6 @@ app.use(bodyParser.json());
 // Provide access to node_modules folder
 app.use('/scripts', express.static(`${__dirname}/node_modules/`));
 
-
 const errorHandler = (err, req, res) => {
   if (err.response) {
     // The request was made and the server responded with a status code
@@ -39,17 +38,9 @@ const errorHandler = (err, req, res) => {
 // Fetch Latest Currency Rates
 app.get('/users', async (req, res) => {
   try {
-    let data;
-    // get the user starlord55
-    User.find({ username: 'vahag' }).lean().exec(function(err, users) {
-      if (err) throw err;
+    const user = await User.find({ username: 'vahag' });
 
-      // object of the user
-      data = users[0].texts.map((text) => text.body);
-    });
-
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(data));
+    res.send(user);
   } catch (error) {
     errorHandler(error, req, res);
   }
@@ -57,20 +48,14 @@ app.get('/users', async (req, res) => {
 
 app.post('/users/text', async (req, res) => {
   // create a new user
-  let newUser = User({
+  let newUser = new User({
     username: req.body.username,
     city: req.body.city,
-    texts: [{body: req.body.text}]
+    texts: [{ body: req.body.text }]
   });
-
-  // save the user
-  newUser.save(function(err) {
-    if (err) throw err;
-
-    console.log('Text added for the user!');
-  });
-
-}); 
+  const data = await newUser.save();
+  res.send(data);
+});
 
 // Redirect all traffic to index.html
 app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));

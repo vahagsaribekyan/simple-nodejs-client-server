@@ -1,43 +1,51 @@
 <html>
 <head>
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/fontawesome-all.min.css"/>
-	<link rel="stylesheet" href="css/index_style.css"/>   
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/fontawesome-all.min.css"/>
+    <link rel="stylesheet" href="css/index_style.css"/>
 
 </head>
 <body>
 
-	<h1 class="txt-center"> Hello World! </h1>
+<h1 class="txt-center"> Hello World! </h1>
 
 <div>
-  <p>Username</p>
-  <input type="text" class="listButton">
-  <button type="submit" class="btn btn-primary" id='list'>List texts</button>
+    <p>Username</p>
+    <input type="text" class="username">
+    <button type="submit" class="btn btn-primary" id='button'>List texts</button>
 </div>
 
 <div>
-  <p>City</p>
-  <input type="text">
+    <p>City</p>
+    <input type="text" class="city">
 </div>
 
 <div>
-  <p>Please enter your text</p>
-  <input type="text">
-  <button type="submit" class="btn btn-primary">Done</button>
+    <p>Please enter your text</p>
+    <input type="text" class="text">
+    <button type="submit" class="btn btn-primary" id="portbutton">Done</button>
 </div>
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 <script type="text/javascript">
-  $(document).ready(function(){
-    $('.listButton').on('click', function(){
-
-    })
-  })
-  function listTexts() {
-    console.log("aaaaaaaa")
-  }
+  $(document).ready(function () {
+    $('#button').on('click', function () {
+      $.get('/users', function (data) {
+        console.log(data);
+      });
+    });
+    $('#portbutton').on('click', function () {
+      let username = $('.username').val();
+      let city = $('.city').val();
+      let text = $('.text').val();
+      $.post('/users/text', { username: username, city: city, text: text }, function (data) {
+        console.log(data);
+      });
+    });
+  });
 </script>
 
 </body>
