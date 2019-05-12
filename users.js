@@ -4,15 +4,11 @@ let Schema = mongoose.Schema;
 
 // create a schema
 let userSchema = new Schema({
-  name: String,
   username: { type: String, required: true, unique: true },
-  location: String,
-  meta: {
-    age: Number,
-    website: String
-  },
-  created_at: Date,
-  updated_at: Date
+  city: String,
+  texts: [{ body: String, date: { type: Date, default: Date.now }}],
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
 });
 
 // the schema is useless so far

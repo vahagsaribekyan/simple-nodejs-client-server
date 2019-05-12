@@ -42,9 +42,9 @@ app.get('/users', async (req, res) => {
     const data = req.body;
     // create a new user called chris
     var chris = new User({
-      name: 'Chris',
-      username: 'sevilayha',
-      password: 'password' 
+      username: "vahag",
+      city: "yerevan",
+      texts: [{body: "barev"}]
     });
 
     // call the built-in save method to save to the database
