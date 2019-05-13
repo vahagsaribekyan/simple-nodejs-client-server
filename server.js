@@ -1,4 +1,6 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 
 require("./db.js");
@@ -35,7 +37,6 @@ const errorHandler = (err, req, res) => {
   }
 };
 
-// Fetch Latest Currency Rates
 app.get('/users', async (req, res) => {
   try {
     let username = req.query.username;
@@ -52,7 +53,6 @@ app.get('/users', async (req, res) => {
 
 app.post('/users/text', async (req, res) => {
   try {
-    const users = await User.find({ username: req.body.username });
     let found = false;
     User.findOne({username: req.body.username}, (err, user) => {
       if(!user) return;
@@ -91,7 +91,11 @@ app.post('/users/text', async (req, res) => {
 // Redirect all traffic to index.html
 app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
+// to support https we give paths for certificate and key
+https.createServer({
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert')
+}, app)
+.listen(port, function () {
   console.log('listening on %d', port);
 });
